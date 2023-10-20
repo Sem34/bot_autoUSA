@@ -1,12 +1,8 @@
 import bot from "./app.js";
 import { sendToRawContact, sendToRawContactBlunder, sendToRawContacRequest, sendToRawStatusReserve, sendToRawStatusDone } from './writegoog.js'
-// import { changeMessage } from "./editChannel.js";
-import { googleFindMessageId, sendNewRowsToTelegram } from './crawler.js';
+import { sendNewRowsToTelegram } from './crawler.js';
 import { getSpreadsheetData, searchForNew } from "./filedata.js";
 import { dataBot } from './values.js';
-// import { writeToGoogleSheets } from './googleSheets.js';
-
-
 
 let customerPhone;
 let customerName;

@@ -70,14 +70,14 @@ const getCellValue = async (spreadsheetId, sheetName, columnName, rowNumber) => 
   }
   return "";
 };
-
-const googleFindMessageId = async (rowNumber) => {
-  const spreadsheetId = dataBot.googleSheetId;
-  const sheetName = "auto";
-  const columnName = "L";
-  const cellValue = await getCellValue(spreadsheetId, sheetName, columnName, rowNumber);
-  return cellValue;
-};
+//поиск по айдишнику
+// const googleFindMessageId = async (rowNumber) => {
+//   const spreadsheetId = dataBot.googleSheetId;
+//   const sheetName = "auto";
+//   const columnName = "L";
+//   const cellValue = await getCellValue(spreadsheetId, sheetName, columnName, rowNumber);
+//   return cellValue;
+// };
 
 //ВИКОРИСТОВУЄТЬСЯ!!!
 const sendNewRowsToTelegram = async (spreadsheetId, sheetName, columnName, chatId, bot) => {
@@ -101,6 +101,5 @@ export {
   getArrayFromColumn,
   getSpreadsheetData,
   crawlerStatusNew,
-  googleFindMessageId,
   sendNewRowsToTelegram
 };
