@@ -36,8 +36,13 @@ const keyboards = {
     ['Ні, повторити введення'],
     ['/start'],
   ],
-  enterPhone: [ ['/start'] ]
+  enterPhone: [ ['/start'] ],
+  surveyQuestion1: [['10000$ - 15000$', '15000$ - 20000$', '20000$ - 30000$']],
+  surveyQuestion2: [['2005-2010', '2010-2015', '2015-2023']]
 }
+const mainMenu = [
+  ['Підібрати авто', 'Прорахувати авто', 'Звʼяжіться зі мною'],
+];
 
 export const anketaListiner = async() => {
     let selectedOrderRaw;
@@ -134,13 +139,28 @@ export const anketaListiner = async() => {
         };
       } else if (msg.text === 'Прорахувати авто') {
         const chatId = msg.chat.id;
-        let clientWishes = '';
-        let awaitingContact = false; // Флаг для отслеживания ожидания контакта
       
-        bot.sendMessage(chatId, 'Введіть ваші побажання по авто:');
-        //звʼяжіться зі мною 
-      } else if (msg.text === 'Звʼяжіться зі мною') {
-       
+        // Создаем массив кнопок опций для surveyQuestion1
+        const optionsQuestion1 = keyboards.surveyQuestion1;
+      
+
+      
+        // Отправляем сообщение с кнопками опций
+        bot.sendMessage(chatId, 'В який, приблизно, бюджет Вам підібрати автомобіль?', {
+          reply_markup: { keyboard: optionsQuestion1, one_time_keyboard: true },
+        });
+      } else if (msg.text === '10000$ - 15000$' || msg.text === '15000$ - 20000$' || msg.text === '20000$ - 30000$') {
+        // Здесь optionsQuestion2 уже определен и готов к использованию
+        const chatId = msg.chat.id;
+                // Создаем массив кнопок опций для surveyQuestion2
+                const optionsQuestion2 = keyboards.surveyQuestion2;
+
+        // Отправляем второй вопрос
+        bot.sendMessage(chatId, 'Яких років авто Ви розглядаєте?', {
+          reply_markup: { keyboard: optionsQuestion2, one_time_keyboard: true },
+        });
+      } else if (msg.text === '2005-2010' || msg.text === '2010-2015' || msg.text === '2015-2023') {
+        bot.sendMessage(chatId, 'Дякуємо за відповіді, дані прийнято. Наш менеджер звʼяжеться з Вами найближчим часом.');
       }
 
   
