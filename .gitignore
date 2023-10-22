@@ -1,3 +1,4 @@
 node_modules
 credentials.json
 values.js
+.DS_Store
