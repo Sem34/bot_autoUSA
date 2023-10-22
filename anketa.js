@@ -25,7 +25,7 @@ const phrases = {
 };
 
 const keyboards = {
-  startingKeyboard: [['Підібрати авто', 'Прорахувати авто', 'Звʼяжіться зі мною']],
+  startingKeyboard: [['🚙 Підібрати авто', '🚗 Прорахувати авто', '📞 Звʼяжіться зі мною']],
   contactRequest: [
     [ { text: 'Так', request_contact: true, } ],
     ['Ні, я введу номер вручну'],
@@ -37,11 +37,11 @@ const keyboards = {
     ['/start'],
   ],
   enterPhone: [ ['/start'] ],
-  surveyQuestion1: [['10000$ - 15000$', '15000$ - 20000$', '20000$ - 30000$']],
-  surveyQuestion2: [['2005-2010', '2010-2015', '2015-2023']]
+  surveyQuestion1: [['💰7000$ - 10000$', '💰10000$ - 15000$', '💰15000$ - 20000$', '💰+20000$']],
+  surveyQuestion2: [['📅2005-2010', '📅2010-2015', '📅2015-2023']]
 }
 const mainMenu = [
-  ['Підібрати авто', 'Прорахувати авто', 'Звʼяжіться зі мною'],
+  ['🚙 Підібрати авто', '🚗 Прорахувати авто', '📞 Звʼяжіться зі мною'],
 ];
 
 export const anketaListiner = async() => {
@@ -90,7 +90,7 @@ export const anketaListiner = async() => {
     bot.on('message', async (msg) => {
       console.log(customerInfo);
       const chatId = msg.chat.id;
-      if (msg.text === 'Підібрати авто') await sendNewRowsToTelegram(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot);
+      if (msg.text === '🚙 Підібрати авто') await sendNewRowsToTelegram(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot);
       else if (msg.contact) {
         customerInfo[chatId] = { name : msg.contact.first_name, phone : msg.contact.phone_number};
         customerPhone = msg.contact.phone_number;
@@ -137,7 +137,7 @@ export const anketaListiner = async() => {
           reply_markup: { keyboard: keyboards.dataConfirmation, resize_keyboard: true, one_time_keyboard: true },
         });
         };
-      } else if (msg.text === 'Прорахувати авто') {
+      } else if (msg.text === '🚗 Прорахувати авто') {
         const chatId = msg.chat.id;
       
         // Создаем массив кнопок опций для surveyQuestion1
@@ -149,7 +149,7 @@ export const anketaListiner = async() => {
         bot.sendMessage(chatId, 'В який, приблизно, бюджет Вам підібрати автомобіль?', {
           reply_markup: { keyboard: optionsQuestion1, one_time_keyboard: true },
         });
-      } else if (msg.text === '10000$ - 15000$' || msg.text === '15000$ - 20000$' || msg.text === '20000$ - 30000$') {
+      } else if (msg.text === '💰7000$ - 10000$' || msg.text === '💰10000$ - 15000$' || msg.text === '💰15000$ - 20000$' || msg.text === '💰+20000$') {
         // Здесь optionsQuestion2 уже определен и готов к использованию
         const chatId = msg.chat.id;
                 // Создаем массив кнопок опций для surveyQuestion2
@@ -159,11 +159,13 @@ export const anketaListiner = async() => {
         bot.sendMessage(chatId, 'Яких років авто Ви розглядаєте?', {
           reply_markup: { keyboard: optionsQuestion2, one_time_keyboard: true },
         });
-      } else if (msg.text === '2005-2010' || msg.text === '2010-2015' || msg.text === '2015-2023') {
+      } else if (msg.text === '📅2005-2010' || msg.text === '📅2010-2015' || msg.text === '📅2015-2023') {
         bot.sendMessage(chatId, 'Дякуємо за відповіді, дані прийнято. Наш менеджер звʼяжеться з Вами найближчим часом.');
-      }
+      } 
+      else if (msg.text === '📞 Звʼяжіться зі мною') {
+        bot.sendMessage(chatId, 'Нам потрібні Ваші контактні дані');
 
-  
+      }
   });
 };
   

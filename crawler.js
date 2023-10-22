@@ -90,8 +90,8 @@ const sendNewRowsToTelegram = async (spreadsheetId, sheetName, columnName, chatI
   // Build row text for each row data
   rowDataArray.forEach((rowData, index) => {
       const rowNumber = newRows[index];
-      const rowText = `Авто  ${rowNumber} \n ${rowData.values[0][0]} \n ${rowData.values[0][1]} \n ${rowData.values[0][2]} \n ${rowData.values[0][3]} \n ${rowData.values[0][4]} \n ${rowData.values[0][5]}`;; // Adds a smiley emoji
-      bot.sendMessage(chatId, rowText, { reply_markup: { inline_keyboard: [[{ text: "Детальніше про це авто", callback_data: `${rowNumber}` }]] } });
+      const rowText = `🚗 Варіант Авто  ${rowNumber} \n ${rowData.values[0][0]} \n ${rowData.values[0][1]} \n ${rowData.values[0][2]} \n ${rowData.values[0][3]} \n ${rowData.values[0][4]} \n ${rowData.values[0][5]}`;; // Adds a smiley emoji
+      bot.sendMessage(chatId, rowText, { reply_markup: { inline_keyboard: [[{ text: "⭐ Детальніше про це авто", callback_data: `${rowNumber}` }]] } });
   });
 };
 
