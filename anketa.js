@@ -21,7 +21,7 @@ const phrases = {
   wrongName: 'Невірне ім\'я. Будь ласка, введіть своє справжнє ім\'я:',
   wrongPhone: 'Невірний номер телефону. Будь ласка, введіть номер телефону ще раз:',
   phoneRules: 'Введіть ваш номер телефону без +. Лише цифри. І відправте повідомлення',
-  nameRequest: 'Введіть своє ім\'я:',
+  nameRequestPhone: 'Введіть своє ім\'я та номер телефону одним повідомленням',
   phoneRequest: 'Введіть, будь ласка, Ваш номер телефону без "+380"' 
 };
 
@@ -166,12 +166,13 @@ export const anketaListiner = async() => {
         bot.sendMessage(chatId, 'Дякуємо за відповіді, дані прийнято. Наш менеджер звʼяжеться з Вами найближчим часом.');
       } 
       else if (msg.text === '📞 Звʼяжіться зі мною') {
-        bot.sendMessage(chatId, phrases.nameRequest);
+        bot.sendMessage(chatId, phrases.nameRequestPhone);
     } else if (msg.text && customerName === undefined && msg.text !== '/start' ) {
         const enteredName = msg.text;
         customerName = enteredName;
         console.log(`Имя клиента: ${enteredName}`);
         bot.sendMessage(dataBot.channelId, customerName);
+        bot.sendMessage(chatId, 'Дякуємо за Вашу заявку. Менеджер звʼяжеться з Вами найближчим часом.');
         // bot.sendMessage(chatId, phrases.phoneRequest, { reply_markup: { keyboard: keyboards.phoneRequest, resize_keyboard: true } });
 
     } 
