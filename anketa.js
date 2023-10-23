@@ -22,6 +22,7 @@ const phrases = {
   wrongPhone: 'Невірний номер телефону. Будь ласка, введіть номер телефону ще раз:',
   phoneRules: 'Введіть ваш номер телефону без +. Лише цифри. І відправте повідомлення',
   nameRequest: 'Введіть своє ім\'я:',
+  phoneRequest: 'Введіть, будь ласка, Ваш номер телефону без "+380"' 
 };
 
 const keyboards = {
@@ -37,24 +38,32 @@ const keyboards = {
     ['/start'],
   ],
   enterPhone: [ ['/start'] ],
-  surveyQuestion1: [['💰7000$ - 10000$', '💰10000$ - 15000$', '💰15000$ - 20000$', '💰+20000$']],
-  surveyQuestion2: [['📅2005-2010', '📅2010-2015', '📅2015-2023']]
+  surveyQuestion1: [['💰7000$ - 10000$', '💰10000$ - 15000$'], 
+  ['💰15000$ - 20000$', '💰+20000$']
+],
+  surveyQuestion2: [['📅2005-2010', '📅2010-2015'],
+  ['📅2015-2020', '📅2020-2023']],
+  phoneRequest: [['Ввести номер']]
 }
 const mainMenu = [
   ['🚙 Підібрати авто', '🚗 Прорахувати авто', '📞 Звʼяжіться зі мною'],
 ];
 
+function isValidPhoneNumber(phone) {
+  // Удаляем все нецифровые символы из номера
+  const cleanPhoneNumber = phone.replace(/\D/g, '');
+
+  // Проверяем, что номер содержит ровно 10 цифр
+  return /^[0-9]{10}$/.test(cleanPhoneNumber);
+}
+
 export const anketaListiner = async() => {
     let selectedOrderRaw;
-    let calculationState = false; // Новое состояние для прорасчета авто
-    let desiredCarInfo = {}; // Информация о желаемом авто
-
+  
     bot.onText(/\/start/ , (msg) => {
       customerPhone = undefined;
       customerName = undefined;
-      calculationState = false; // Сбрасываем состояние
-      desiredCarInfo = {}; // Сбрасываем информацию о желаемом авто
-
+   
       let userNickname = ''; // Изначально никнейм пустой
   
       // Проверка наличия никнейма пользователя
@@ -65,7 +74,7 @@ export const anketaListiner = async() => {
       }
   
       // Теперь вы можете использовать userNickname в тексте приветствия
-      const greetingMessage = `Вітаємо, ${userNickname}! Це чат-бот компанії "AutoCar - Авто зі США" 🇺🇸`;
+      const greetingMessage = `Вітаємо! Це чат-бот компанії "AutoCar - Авто зі США" 🇺🇸`; //Вітаємо, ${userNickname}
   
       bot.sendMessage(msg.chat.id, greetingMessage, {
           reply_markup: {
@@ -112,9 +121,6 @@ export const anketaListiner = async() => {
           const range = `auto!A${selectedOrderRaw}:E${selectedOrderRaw}`;
           const data = await getSpreadsheetData(spreadsheetId, range);
           if (data.values && data.values.length > 0) {
-          // const message = data.values[0].join('\n');
-          // const idToDelete = await googleFindMessageId(selectedOrderRaw)
-          // await changeMessage(idToDelete, message);
           }
           bot.sendMessage(chatId, `Ваші дані відправлені. Дякуємо ${customerInfo[chatId].name} за звернення. Наш менеджер звʼяжеться з Вами найближчим часом.`);
       } else if (msg.text === 'Почати спочатку') {
@@ -143,8 +149,6 @@ export const anketaListiner = async() => {
         // Создаем массив кнопок опций для surveyQuestion1
         const optionsQuestion1 = keyboards.surveyQuestion1;
       
-
-      
         // Отправляем сообщение с кнопками опций
         bot.sendMessage(chatId, 'В який, приблизно, бюджет Вам підібрати автомобіль?', {
           reply_markup: { keyboard: optionsQuestion1, one_time_keyboard: true },
@@ -154,18 +158,29 @@ export const anketaListiner = async() => {
         const chatId = msg.chat.id;
                 // Создаем массив кнопок опций для surveyQuestion2
                 const optionsQuestion2 = keyboards.surveyQuestion2;
-
         // Отправляем второй вопрос
         bot.sendMessage(chatId, 'Яких років авто Ви розглядаєте?', {
           reply_markup: { keyboard: optionsQuestion2, one_time_keyboard: true },
         });
-      } else if (msg.text === '📅2005-2010' || msg.text === '📅2010-2015' || msg.text === '📅2015-2023') {
+      } else if (msg.text === '📅2005-2010' || msg.text === '📅2010-2015' || msg.text === '📅2015-2020' || msg.text === '📅2020-2023') {
         bot.sendMessage(chatId, 'Дякуємо за відповіді, дані прийнято. Наш менеджер звʼяжеться з Вами найближчим часом.');
       } 
       else if (msg.text === '📞 Звʼяжіться зі мною') {
-        bot.sendMessage(chatId, 'Нам потрібні Ваші контактні дані');
+        bot.sendMessage(chatId, phrases.nameRequest);
+    } else if (msg.text && customerName === undefined && msg.text !== '/start' ) {
+        const enteredName = msg.text;
+        customerName = enteredName;
+        console.log(`Имя клиента: ${enteredName}`);
+        bot.sendMessage(dataBot.channelId, customerName);
+        // bot.sendMessage(chatId, phrases.phoneRequest, { reply_markup: { keyboard: keyboards.phoneRequest, resize_keyboard: true } });
 
-      }
+    } 
+    // else if (msg.text && customerName && customerPhone === undefined) {
+  //     bot.sendMessage(chatId, phrases.phoneRequest, { reply_markup: { keyboard: keyboards.phoneRequest, resize_keyboard: true } });
+  // }
+  
+    
+   
   });
 };
   

@@ -6,6 +6,12 @@ import { dataBot } from './values.js';
 
 const bot = new TelegramBot(dataBot.telegramBotToken, { polling: true });
 export default bot;
+bot.setMyCommands([
+  {command: '/start', description: 'Почати'},
+  {command: '/list', description: 'Показати всі авто в наявності'},
+]);
+
+
 
 anketaListiner();
 //channel lots autoposting
