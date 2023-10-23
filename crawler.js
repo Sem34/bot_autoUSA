@@ -62,14 +62,14 @@ const crawlerStatusNew = async (spreadsheetId, sheetName, triggerColumn) => {
 };
 
 //  search value in specified cell
-const getCellValue = async (spreadsheetId, sheetName, columnName, rowNumber) => {
-  const range = `${sheetName}!${columnName}${rowNumber}`;
-  const data = await getSpreadsheetData(spreadsheetId, range);
-  if (data.values && data.values.length > 0) {
-    return data.values[0][0];
-  }
-  return "";
-};
+// const getCellValue = async (spreadsheetId, sheetName, columnName, rowNumber) => {
+//   const range = `${sheetName}!${columnName}${rowNumber}`;
+//   const data = await getSpreadsheetData(spreadsheetId, range);
+//   if (data.values && data.values.length > 0) {
+//     return data.values[0][0];
+//   }
+//   return "";
+// };
 //поиск по айдишнику
 // const googleFindMessageId = async (rowNumber) => {
 //   const spreadsheetId = dataBot.googleSheetId;
