@@ -32,7 +32,7 @@ const crawlerRaw = async (spreadsheetId, sheetName, triggerColumn) => {
     
   // Get row data for each row number
   const rowPromises = rowNumbers.map(rowNumber => {
-    const range = `${sheetName}!A${rowNumber}:E${rowNumber}`;
+    const range = `${sheetName}!A${rowNumber}:G${rowNumber}`;
     return getSpreadsheetData(spreadsheetId, range);
   });
   
@@ -85,7 +85,7 @@ const sendNewRowsToTgByPrice710 = async (spreadsheetId, sheetName, columnName, c
   const newRows = getStatusData
     .map((value, index) => value === "new" ? index + 1 : null)
     .filter(value => value !== null);
-  const rowPromises = newRows.map(rowNumber => getSpreadsheetData(spreadsheetId, `${sheetName}!A${rowNumber}:F${rowNumber}`));
+  const rowPromises = newRows.map(rowNumber => getSpreadsheetData(spreadsheetId, `${sheetName}!A${rowNumber}:G${rowNumber}`));
   const rowDataArray = await Promise.all(rowPromises);
   // Build row text for each row data
   // rowDataArray.forEach((rowData, index) => {
@@ -98,7 +98,7 @@ const sendNewRowsToTgByPrice710 = async (spreadsheetId, sheetName, columnName, c
     const rowNumber = newRows[index];
     const price = parseFloat(rowData.values[0][5]); // Assuming the price is in column F (index 5)
 if (!isNaN(price) && price >= 7000 && price <= 10000) {
-  const rowText = `🚗 Варіант Авто  ${rowNumber} \n ${rowData.values[0][0]} \n ${rowData.values[0][1]} \n ${rowData.values[0][2]} \n ${rowData.values[0][3]} \n ${rowData.values[0][4]} \n ${rowData.values[0][5]}`;;
+  const rowText = `🚗 Варіант Авто  ${rowNumber} \n \n ✅ Марка/модель: ${rowData.values[0][0]} \n ✅ Двигун: ${rowData.values[0][1]} \n ✅ Привід: ${rowData.values[0][2]} \n ✅ Пробіг: ${rowData.values[0][3]} \n ✅ Рік: ${rowData.values[0][4]} \n \n 💲 Ціна: ${rowData.values[0][5]} \n \n ${rowData.values[0][6]}`;;
   await bot.sendMessage(chatId, rowText, { reply_markup: { inline_keyboard: [[{ text: "⭐ Детальніше про це авто", callback_data: `${rowNumber}` }]] } });
 }
   });
@@ -108,14 +108,14 @@ const sendNewRowsTgByPrice1015 = async (spreadsheetId, sheetName, columnName, ch
   const newRows = getStatusData
     .map((value, index) => value === "new" ? index + 1 : null)
     .filter(value => value !== null);
-  const rowPromises = newRows.map(rowNumber => getSpreadsheetData(spreadsheetId, `${sheetName}!A${rowNumber}:F${rowNumber}`));
+  const rowPromises = newRows.map(rowNumber => getSpreadsheetData(spreadsheetId, `${sheetName}!A${rowNumber}:G${rowNumber}`));
   const rowDataArray = await Promise.all(rowPromises);
   //фильтр тестовый по цене 
   rowDataArray.forEach(async (rowData, index) => {
     const rowNumber = newRows[index];
     const price = parseFloat(rowData.values[0][5]); // Assuming the price is in column F (index 5)
 if (!isNaN(price) && price >= 10000 && price <= 15000) {
-  const rowText = `🚗 Варіант Авто  ${rowNumber} \n ${rowData.values[0][0]} \n ${rowData.values[0][1]} \n ${rowData.values[0][2]} \n ${rowData.values[0][3]} \n ${rowData.values[0][4]} \n ${rowData.values[0][5]}`;;
+  const rowText = `🚗 Варіант Авто  ${rowNumber} \n \n ✅ Марка/модель: ${rowData.values[0][0]} \n ✅ Двигун: ${rowData.values[0][1]} \n ✅ Привід: ${rowData.values[0][2]} \n ✅ Пробіг: ${rowData.values[0][3]} \n ✅ Рік: ${rowData.values[0][4]} \n \n 💲 Ціна: ${rowData.values[0][5]} \n \n ${rowData.values[0][6]}`;;
   await bot.sendMessage(chatId, rowText, { reply_markup: { inline_keyboard: [[{ text: "⭐ Детальніше про це авто", callback_data: `${rowNumber}` }]] } });
 }
   });
@@ -125,14 +125,14 @@ const sendNewRowsTgByPrice1520 = async (spreadsheetId, sheetName, columnName, ch
   const newRows = getStatusData
     .map((value, index) => value === "new" ? index + 1 : null)
     .filter(value => value !== null);
-  const rowPromises = newRows.map(rowNumber => getSpreadsheetData(spreadsheetId, `${sheetName}!A${rowNumber}:F${rowNumber}`));
+  const rowPromises = newRows.map(rowNumber => getSpreadsheetData(spreadsheetId, `${sheetName}!A${rowNumber}:G${rowNumber}`));
   const rowDataArray = await Promise.all(rowPromises);
   //фильтр тестовый по цене 
   rowDataArray.forEach(async (rowData, index) => {
     const rowNumber = newRows[index];
     const price = parseFloat(rowData.values[0][5]); // Assuming the price is in column F (index 5)
 if (!isNaN(price) && price >= 15000 && price <= 20000) {
-  const rowText = `🚗 Варіант Авто  ${rowNumber} \n ${rowData.values[0][0]} \n ${rowData.values[0][1]} \n ${rowData.values[0][2]} \n ${rowData.values[0][3]} \n ${rowData.values[0][4]} \n ${rowData.values[0][5]}`;;
+  const rowText = `🚗 Варіант Авто  ${rowNumber} \n \n ✅ Марка/модель: ${rowData.values[0][0]} \n ✅ Двигун: ${rowData.values[0][1]} \n ✅ Привід: ${rowData.values[0][2]} \n ✅ Пробіг: ${rowData.values[0][3]} \n ✅ Рік: ${rowData.values[0][4]} \n \n 💲 Ціна: ${rowData.values[0][5]} \n \n ${rowData.values[0][6]}`;;
   await bot.sendMessage(chatId, rowText, { reply_markup: { inline_keyboard: [[{ text: "⭐ Детальніше про це авто", callback_data: `${rowNumber}` }]] } });
 }
   });
@@ -142,14 +142,14 @@ const sendNewRowsTgByPrice20 = async (spreadsheetId, sheetName, columnName, chat
   const newRows = getStatusData
     .map((value, index) => value === "new" ? index + 1 : null)
     .filter(value => value !== null);
-  const rowPromises = newRows.map(rowNumber => getSpreadsheetData(spreadsheetId, `${sheetName}!A${rowNumber}:F${rowNumber}`));
+  const rowPromises = newRows.map(rowNumber => getSpreadsheetData(spreadsheetId, `${sheetName}!A${rowNumber}:G${rowNumber}`));
   const rowDataArray = await Promise.all(rowPromises);
   //фильтр тестовый по цене 
   rowDataArray.forEach(async (rowData, index) => {
     const rowNumber = newRows[index];
     const price = parseFloat(rowData.values[0][5]); // Assuming the price is in column F (index 5)
 if (!isNaN(price) && price >= 20000) {
-  const rowText = `🚗 Варіант Авто  ${rowNumber} \n ${rowData.values[0][0]} \n ${rowData.values[0][1]} \n ${rowData.values[0][2]} \n ${rowData.values[0][3]} \n ${rowData.values[0][4]} \n ${rowData.values[0][5]}`;;
+  const rowText = `🚗 Варіант Авто  ${rowNumber} \n \n ✅ Марка/модель: ${rowData.values[0][0]} \n ✅ Двигун: ${rowData.values[0][1]} \n ✅ Привід: ${rowData.values[0][2]} \n ✅ Пробіг: ${rowData.values[0][3]} \n ✅ Рік: ${rowData.values[0][4]} \n \n 💲 Ціна: ${rowData.values[0][5]} \n \n ${rowData.values[0][6]}`;;
   await bot.sendMessage(chatId, rowText, { reply_markup: { inline_keyboard: [[{ text: "⭐ Детальніше про це авто", callback_data: `${rowNumber}` }]] } });
 }
   });
