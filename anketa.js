@@ -1,7 +1,6 @@
 import bot from "./app.js";
-import { sendToRawContact, sendToRawContactBlunder, sendToRawContacRequest, sendToRawStatusReserve, sendToRawStatusDone } from './writegoog.js'
 import { sendNewRowsToTgByPrice710, sendNewRowsTgByPrice1015, sendNewRowsTgByPrice1520, sendNewRowsTgByPrice20 } from './crawler.js';
-import { getSpreadsheetData, searchForNew } from "./filedata.js";
+import { searchForNew } from "./filedata.js";
 import { dataBot } from './values.js';
 
 let customerPhone;
@@ -45,39 +44,24 @@ const keyboards = {
   ['📅2015-2020', '📅2020-2023']],
   phoneRequest: [['Ввести номер']],
   budget: [['💵7000$ - 10000$', '💵10000$ - 15000$'], 
-  ['💵15000$ - 20000$', '💵+20000']]
-}
-const mainMenu = [
-  ['🚙 Підібрати авто', '🚗 Прорахувати авто', '📞 Звʼяжіться зі мною'],
-];
-
-function isValidPhoneNumber(phone) {
-  // Удаляем все нецифровые символы из номера
-  const cleanPhoneNumber = phone.replace(/\D/g, '');
-
-  // Проверяем, что номер содержит ровно 10 цифр
-  return /^[0-9]{10}$/.test(cleanPhoneNumber);
+  ['💵15000$ - 20000$', '💵+20000$']]
 }
 
 export const anketaListiner = async() => {
     let selectedOrderRaw;
     let selectedBudget;
     let selectedYear;    
-    // let answers = selectedBudget + ' ' + selectedYear;
-    let answers = [selectedBudget , selectedYear]
+    
     bot.onText(/\/start/ , (msg) => {
       customerPhone = undefined;
       customerName = undefined;
-   
       let userNickname = ''; // Изначально никнейм пустой
-  
       // Проверка наличия никнейма пользователя
       if (msg.from.username) {
           userNickname = msg.from.username;
       } else {
           userNickname = ''; // Если у пользователя нет никнейма
       }
-  
       // Теперь вы можете использовать userNickname в тексте приветствия
       const greetingMessage = `Вітаємо! Це чат-бот компанії "AutoCar - Авто зі США" 🇺🇸`; //Вітаємо, ${userNickname}
   
@@ -97,43 +81,24 @@ export const anketaListiner = async() => {
       const range = `auto!N${selectedOrderRaw}`;
       const statusNew = await searchForNew(spreadsheetId, range)
       if (statusNew) {
-        sendToRawStatusReserve(selectedOrderRaw);
         bot.sendMessage(chatId, phrases.contactRequest, { reply_markup: { keyboard: keyboards.contactRequest, resize_keyboard: true } });
       } else bot.sendMessage(chatId, 'є замовлення від іншого користувача');
     })
-    // отправка с таблицы 
-    // await sendNewRowsToTelegram(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot)
     bot.on('message', async (msg) => {
       console.log(customerInfo);
       const chatId = msg.chat.id;
       if (msg.text === '🚙 Підібрати авто') {
         const chatId = msg.chat.id;
-      
         // Создаем массив кнопок опций для surveyQuestion1
         const optionsQuestion1 = keyboards.surveyQuestion1;
-      
         // Отправляем сообщение с кнопками опций
         bot.sendMessage(chatId, 'В який, приблизно, бюджет Вам підібрати автомобіль?', {
           reply_markup: { keyboard: optionsQuestion1, one_time_keyboard: true },
         });
-      } 
-      // else if (msg.text === '💰7000$ - 10000$') {
-      //   // Пользователь выбрал диапазон 7000$ - 10000$
-      //   await sendNewRowsToTelegram(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot)
-      // } else if (msg.text === '💰10000$ - 15000$') {
-      //   // Пользователь выбрал диапазон 10000$ - 15000$
-      //   await sendNewRowsToTelegram(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot)
-      // } else if (msg.text === '💰15000$ - 20000$') {
-      //   // Пользователь выбрал диапазон 15000$ - 20000$
-      //   await sendNewRowsToTelegram(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot)
-      // }
-      // else if (msg.text === '💰+20000$') {
-      //   // Пользователь выбрал диапазон +20000$
-      //   await sendNewRowsToTelegram(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot)
-      // }
-      else if (msg.text === '💰7000$ - 10000$') {
+      } else if (msg.text === '💰7000$ - 10000$') {
         // Пользователь выбрал один из вариантов по цене
         const chatId = msg.chat.id;
+        // Передаем информацию о выборе пользователя в функцию для фильтрации
         await sendNewRowsToTgByPrice710(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot, msg.text);
       } else if (msg.text === '💰10000$ - 15000$') {
         // Пользователь выбрал один из вариантов по цене
@@ -142,14 +107,13 @@ export const anketaListiner = async() => {
         await sendNewRowsTgByPrice1015(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot, msg.text);
       } else if (msg.text === '💰15000$ - 20000$') {
         const chatId = msg.chat.id;
+        // Передаем информацию о выборе пользователя в функцию для фильтрации
         await sendNewRowsTgByPrice1520(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot, msg.text);
-
       } else if (msg.text === '💰+20000') {
         const chatId = msg.chat.id;
+        // Передаем информацию о выборе пользователя в функцию для фильтрации
         await sendNewRowsTgByPrice20(spreadsheetId, dataBot.googleSheetName, dataBot.lotStatusColumn, chatId, bot, msg.text);
-
-      }
-      else if (msg.contact) {
+      } else if (msg.contact) {
         customerInfo[chatId] = { name : msg.contact.first_name, phone : msg.contact.phone_number};
         customerPhone = msg.contact.phone_number;
         customerName = msg.contact.first_name;
@@ -163,14 +127,7 @@ export const anketaListiner = async() => {
             },
           });
       } else if(msg.text === 'Так, відправити заявку') {
-          // переписати функції запису даних згідно рядка а не колонки
           await bot.sendMessage(dataBot.channelId, message);
-          await sendToRawContact(customerInfo[chatId].phone, customerInfo[chatId].name, selectedOrderRaw);
-          await sendToRawStatusDone(selectedOrderRaw);
-          const range = `auto!A${selectedOrderRaw}:G${selectedOrderRaw}`;
-          const data = await getSpreadsheetData(spreadsheetId, range);
-          if (data.values && data.values.length > 0) {
-          }
           bot.sendMessage(chatId, `Ваші дані відправлені. Дякуємо ${customerInfo[chatId].name} за звернення. Наш менеджер звʼяжеться з Вами найближчим часом.`);
       } else if (msg.text === 'Почати спочатку') {
         bot.sendMessage(chatId, '/start');
@@ -200,41 +157,44 @@ export const anketaListiner = async() => {
         bot.sendMessage(chatId, 'В який, приблизно, бюджет Вам підібрати автомобіль?', {
           reply_markup: { keyboard: budget, one_time_keyboard: true },
         });
+      } else if (msg.text === '💵7000$ - 10000$' || msg.text === '💵10000$ - 15000$' || msg.text === '💵15000$ - 20000$' || msg.text === '💵+20000$') {
+        selectedBudget = msg.text; // Сохраните выбранный бюджет
+        const chatId = msg.chat.id;
+        const optionsQuestion2 = keyboards.surveyQuestion2;
+        bot.sendMessage(chatId, 'Яких років авто Ви розглядаєте?', {
+            reply_markup: { keyboard: optionsQuestion2, one_time_keyboard: true },
+        });
       } 
-      
-// В блоке обработки сообщений, где пользователь выбирает бюджет
-if (msg.text === '💵7000$ - 10000$' || msg.text === '💵10000$ - 15000$' || msg.text === '💵15000$ - 20000$' || msg.text === '💵+20000$') {
-  selectedBudget = msg.text; // Сохраните выбранный бюджет
-  const chatId = msg.chat.id;
-  const optionsQuestion2 = keyboards.surveyQuestion2;
-  bot.sendMessage(chatId, 'Яких років авто Ви розглядаєте?', {
-      reply_markup: { keyboard: optionsQuestion2, one_time_keyboard: true },
-  });
-} 
-// В блоке обработки сообщений, где пользователь выбирает год
-else if (msg.text === '📅2005-2010' || msg.text === '📅2010-2015' || msg.text === '📅2015-2020' || msg.text === '📅2020-2023') {
-  selectedYear = msg.text; // Сохраните выбранный год
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Дякуємо за відповіді, дані прийнято. Наш менеджер звʼяжеться з Вами найближчим часом.');
-
-  // В этом месте вы можете использовать selectedBudget и selectedYear для сохранения ответа пользователя
-} 
-
-
-      else if (msg.text === '📞 Звʼяжіться зі мною') {
-        bot.sendMessage(chatId, phrases.nameRequestPhone);
-    } else if (msg.text && customerName === undefined && msg.text !== '/start' && msg.text !== '🚗 Прорахувати авто' && msg.text !== '🚙 Підібрати авто' && msg.text !== '🚙 Підібрати авто' 
-    && msg.text !== '💰7000$ - 10000$' && msg.text !== '💰10000$ - 15000$' && msg.text !== '💵15000$ - 20000$' && msg.text !== '💰+20000') {
-        const enteredName = msg.text;
-        customerName = enteredName;
-        console.log(`Имя клиента: ${enteredName}`);
-        bot.sendMessage(dataBot.channelId, customerName);
-        // bot.sendMessage(chatId, 'Дякуємо за Вашу заявку. Менеджер звʼяжеться з Вами найближчим часом.');
-        if (customerName !== undefined && msg.text !== '/start' && msg.text !== '🚗 Прорахувати авто' && msg.text !== '🚙 Підібрати авто') {
-          // Отправьте "Дякую" если есть имя и номер телефона
-          bot.sendMessage(chatId, 'Дякуємо за Вашу заявку. Менеджер звʼяжеться з Вами найближчим часом.');
+      // В блоке обработки сообщений, где пользователь выбирает год
+      else if (msg.text === '📅2005-2010' || msg.text === '📅2010-2015' || msg.text === '📅2015-2020' || msg.text === '📅2020-2023') {
+        selectedYear = msg.text; // Сохраните выбранный год
+        const chatId = msg.chat.id;
+        // Создайте клавиатуру "Request Contact"
+        const requestContactKeyboard = {
+          keyboard: [[{ text: 'Відправити контакт', request_contact: true }]],
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        };
+        const messageToChannel = `Клієнт вибрав бюджет: ${selectedBudget}, рік: ${selectedYear}`;
+        bot.sendMessage(dataBot.channelId, messageToChannel);
+        // Отправьте сообщение с просьбой отправить контакт
+        bot.sendMessage(chatId, 'Будь ласка, відправте свій контакт для звʼязку з вами.', {
+          reply_markup: requestContactKeyboard,
+        });
       }
-    } 
+      if (msg.text === '📞 Звʼяжіться зі мною') {
+      const chatId = msg.chat.id;
+      // Создайте клавиатуру "Request Contact"
+      const requestContactKeyboard = {
+        keyboard: [[{ text: 'Відправити контакт', request_contact: true }]],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+      };
+      // Отправьте сообщение с просьбой отправить контакт
+      bot.sendMessage(chatId, 'Будь ласка, відправте свій контакт для звʼязку з вами.', {
+        reply_markup: requestContactKeyboard,
+      });
+    }
   });
 };
   

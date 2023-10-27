@@ -9,15 +9,6 @@ const sheetName = "auto";
 const columnName = "N";
 //======================
 
-const getCellValue = async (spreadsheetId, sheetName, columnName, rowNumber) => {
-    const range = `${sheetName}!${columnName}${rowNumber}`;
-    const data = await getSpreadsheetData(spreadsheetId, range);
-    if (data.values && data.values.length > 0) {
-      return data.values[0][0];
-    }
-    return "";
-  };
-
 //Gives array from column specifide at the top of this file: work good!
 const getArrayFromColumn = async (spreadsheetId, sheetName, columnName) => {
     const range = `${sheetName}!${columnName}:${columnName}`;

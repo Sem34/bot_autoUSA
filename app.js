@@ -1,5 +1,4 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { sendToBaseMessageId } from './writegoog.js'
 import { getSpreadsheetData } from "./filedata.js";
 import { anketaListiner } from './anketa.js';
 import { dataBot } from './values.js';
@@ -8,7 +7,6 @@ const bot = new TelegramBot(dataBot.telegramBotToken, { polling: true });
 export default bot;
 bot.setMyCommands([
   {command: '/start', description: 'Почати'},
-  {command: '/list', description: 'Показати всі авто в наявності'},
 ]);
 
 
@@ -29,7 +27,6 @@ bot.on('message', async (message) => {
           url: dataBot.botUrl,
         }]] };
         const sentMessage = await bot.sendMessage(dataBot.channelId, message, { reply_markup: keyboard });
-        await sendToBaseMessageId(sentMessage.message_id, rowNumber);
       }
     } catch (error) {
       console.error(error);
